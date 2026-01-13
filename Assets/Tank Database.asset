@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d10116681425ccf44a7daa82378eb2b8, type: 3}
+  m_Name: Tank Database
+  m_EditorClassIdentifier: Assembly-CSharp::TankDatabase
+  tanks:
+  - {fileID: 11400000, guid: 121f2504a5429a440980c93551785f58, type: 2}
+  - {fileID: 11400000, guid: fcd4d6ea91703b14eb26930459c6f9d5, type: 2}
+  - {fileID: 11400000, guid: e685b0c0f5516ae4d8ea46241809aa97, type: 2}
