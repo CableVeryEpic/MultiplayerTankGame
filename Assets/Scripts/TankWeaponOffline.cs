@@ -3,8 +3,6 @@ using UnityEngine.InputSystem;
 
 public class TankWeaponOffline : MonoBehaviour
 {
-    [SerializeField] InputActionReference fireAction;
-
     [SerializeField] private Transform muzzle;
     [SerializeField] private ProjectileOffline projectilePrefab;
 
@@ -17,7 +15,7 @@ public class TankWeaponOffline : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (fireAction.action.IsPressed())
+        if (InputManager.Instance != null && InputManager.Instance.ShootHeld)
         {
             TryFire();
         }

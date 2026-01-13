@@ -3,8 +3,9 @@ using TMPro;
 
 public class TankTestUI : MonoBehaviour
 {
-    public TankMotorOffline tankMotor;
-    public TankAbilityOffline tankAbility;
+    private GameObject tank;
+    private TankMotorOffline tankMotor;
+    private TankAbilityOffline tankAbility;
 
     [Header("Movement")]
     public TMP_Text currentSpeed;
@@ -18,6 +19,15 @@ public class TankTestUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (tank == null)
+        {
+            tank = GameObject.Find("Tank_1");
+            if (tank != null)
+            {
+                tankMotor = tank.GetComponent<TankMotorOffline>();
+                tankAbility = tank.GetComponent<TankAbilityOffline>();
+            }
+        }
         currentSpeed.text = $"Current Speed: {tankMotor.currentSpeed:F2}";
         boostAvailable.text = $"Boost Available: {tankMotor.boostAvailable}";
         profile.text = $"Profile: {tankMotor.profile}";

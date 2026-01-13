@@ -8,19 +8,22 @@ public class ProjectileOffline : MonoBehaviour
 
     [SerializeField] private float lifeTime = 4f;
 
+    private Rigidbody rb;
+
     public void Init(float damage, float speed, GameObject owner)
     {
         this.damage = damage;
         this.speed = speed;
         this.owner = owner;
 
+        rb = GetComponent<Rigidbody>();
         Destroy(gameObject, lifeTime);
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position += transform.forward * speed * Time.deltaTime;
+        rb.position += transform.forward * speed * Time.deltaTime;
     }
 
     private void OnTriggerEnter(Collider other)

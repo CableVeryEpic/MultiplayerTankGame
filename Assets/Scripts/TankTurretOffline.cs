@@ -3,8 +3,6 @@ using UnityEngine.InputSystem;
 
 public class TankTurretOffline : MonoBehaviour
 {
-    [SerializeField] private InputActionReference aimAction;
-
     [SerializeField] private Transform turretPivot;
     [SerializeField] private LayerMask aimMask = ~0;
 
@@ -20,8 +18,9 @@ public class TankTurretOffline : MonoBehaviour
     void Update()
     {
         if (cam == null || turretPivot == null) return;
+        if (InputManager.Instance == null) return;
 
-        Ray ray = cam.ScreenPointToRay(aimAction.action.ReadValue<Vector2>());
+        Ray ray = cam.ScreenPointToRay(InputManager.Instance.Look);
 
         if (Physics.Raycast(ray, out RaycastHit hit, 500f, aimMask, QueryTriggerInteraction.Ignore))
         {

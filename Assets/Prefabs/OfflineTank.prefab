@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3808037889449881320}
   - component: {fileID: 7138424574141528277}
   - component: {fileID: 3983227920135219358}
-  - component: {fileID: 1323120749161980033}
   m_Layer: 0
   m_Name: TurretBarrel
   m_TagString: Untagged
@@ -27,13 +26,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 956647380403241705}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -1.053, y: 0.153, z: 0}
+  m_LocalRotation: {x: 0.5, y: 0.5, z: 0.5, w: 0.5}
+  m_LocalPosition: {x: 0, y: 0.153, z: 1.053}
   m_LocalScale: {x: 0.2, y: 0.6, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5739415353636254969}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 90}
 --- !u!33 &7138424574141528277
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -91,29 +90,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &1323120749161980033
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 956647380403241705}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &1152245413032910332
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,7 +205,7 @@ Transform:
   m_GameObject: {fileID: 2688670842378737870}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.65, y: 0.16, z: 0}
+  m_LocalPosition: {x: 0, y: 0.15, z: 1.65}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -246,8 +222,10 @@ GameObject:
   - component: {fileID: 558213653206571876}
   - component: {fileID: 4399264142787899695}
   - component: {fileID: 711426079779862948}
+  - component: {fileID: 5996517556875953273}
   - component: {fileID: 4863069957269165056}
   - component: {fileID: 5859367439120506321}
+  - component: {fileID: 3036158008718558669}
   - component: {fileID: 2303973996561284860}
   - component: {fileID: 7929870738425077638}
   m_Layer: 0
@@ -266,7 +244,7 @@ Transform:
   m_GameObject: {fileID: 4361076506588931693}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -296,7 +274,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 80
@@ -320,8 +298,26 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5996517556875953273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4361076506588931693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c697400c7ae3f8b4fb344a54002c8e57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Participant
+  isPlayerControlled: 0
+  disableOnDeath:
+  - {fileID: 5859367439120506321}
+  - {fileID: 3036158008718558669}
+  - {fileID: 2303973996561284860}
+  - {fileID: 7929870738425077638}
 --- !u!114 &4863069957269165056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -334,6 +330,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f34e76696c31b734b8ec7b0a3d6ef172, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TankHealthOffline
+  maxHealth: 100
+  armour: 0
 --- !u!114 &5859367439120506321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -346,6 +344,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fcb6675b0bccf641a89778ff2e68840, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TankWeaponOffline
+  muzzle: {fileID: 4187948459597267077}
+  projectilePrefab: {fileID: 8883247779544349089, guid: a7cb0db15e13a374b99c7e2804bf2660, type: 3}
+  fireRate: 3
+  damage: 25
+  projectileSpeed: 18
+--- !u!114 &3036158008718558669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4361076506588931693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2916961534a868b47aa83c39eae2a979, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TankAbilityOffline
+  cooldownSeconds: 5
 --- !u!114 &2303973996561284860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -358,54 +374,64 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c97ec1c03264d8b49a4edbcb6b64c222, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TankMotorOffline
+  turnSpeedDeg: 60
+  maxSpeed: 3
+  brake: 3
+  currentSpeed: 0
   accelerationCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 3.3312929
+      outSlope: 3.3312929
       tangentMode: 0
-      weightedMode: 0
+      weightedMode: 2
       inWeight: 0
-      outWeight: 0.22186758
+      outWeight: 0.118376754
+    - serializedVersion: 3
+      time: 0.1
+      value: 0.2
+      inSlope: 0.8811689
+      outSlope: 0.8811689
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.52158946
+      outWeight: 0.20715629
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: 1.3565589
+      outSlope: 1.3565589
       tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
+      weightedMode: 1
+      inWeight: 0.38418087
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  accelDuration: 0.5
-  maxSpeed: 6
-  brake: 30
-  turnSpeedDeg: 180
+  accelDuration: 2
   boostAccelerationCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: -0
+      outSlope: -0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.22186758
+      outWeight: 0.49152538
     - serializedVersion: 3
-      time: 0.5
-      value: 1.2
+      time: 0.3
+      value: 1.34
       inSlope: 0
       outSlope: 0
       tangentMode: 0
       weightedMode: 1
-      inWeight: 0.7462455
+      inWeight: 0.6525424
       outWeight: 0.24324197
     - serializedVersion: 3
       time: 1
@@ -419,8 +445,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  boostDuration: 0.5
+  boostDuration: 2
   maxSpeedToBoost: 1
+  profile: 0
+  boostAvailable: 0
 --- !u!114 &7929870738425077638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -433,6 +461,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68e68c37ab20e3f4a886102f0fd44032, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TankTurretOffline
+  turretPivot: {fileID: 5739415353636254969}
+  aimMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &5078818849887547964
 GameObject:
   m_ObjectHideFlags: 0
@@ -459,13 +491,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5078818849887547964}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: -0.25, z: 0}
   m_LocalScale: {x: 1.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 558213653206571876}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &8801650031278635131
 MeshFilter:
   m_ObjectHideFlags: 0

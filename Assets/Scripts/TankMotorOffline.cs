@@ -4,10 +4,6 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 public class TankMotorOffline : MonoBehaviour
 {
-    [Header("Input Actions")]
-    [SerializeField] private InputActionReference moveAction;
-    [SerializeField] private InputActionReference boostAction;
-
     [Header("Movement")]
     public float turnSpeedDeg = 180f;
     public float maxSpeed = 6f;
@@ -47,22 +43,10 @@ public class TankMotorOffline : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    private void OnEnable()
-    {
-        moveAction?.action?.Enable();
-        boostAction?.action?.Enable();
-    }
-
-    private void OnDisable()
-    {
-        moveAction?.action?.Disable();
-        boostAction?.action?.Disable();
-    }
-
     private void Update()
     {
-        move = moveAction != null ? moveAction.action.ReadValue<Vector2>() : Vector2.zero;
-        boostHeld = boostAction != null && boostAction.action.IsPressed();
+        move = InputManager.Instance != null ? InputManager.Instance.Move : Vector2.zero;
+        boostHeld = InputManager.Instance != null && InputManager.Instance.BoostHeld;
         boostAvailable = Mathf.Abs(currentSpeed) <= maxSpeedToBoost;
     }
 
