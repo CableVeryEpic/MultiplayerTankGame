@@ -120,7 +120,7 @@ public class TankMotorOffline : MonoBehaviour
 
         Vector3 forward = rb.rotation * Vector3.forward;
         Vector3 v = forward * currentSpeed;
-        rb.linearVelocity = new Vector3(v.x, 0f, v.z);
+        rb.linearVelocity = new Vector3(v.x, rb.linearVelocity.y, v.z);
     }
 
     private void StartForwardAccel(float now)
