@@ -12,12 +12,14 @@ public class InputManager : MonoBehaviour
     [SerializeField] private InputActionReference boostAction;
 
     [SerializeField] private InputActionReference abilityAction;
+    [SerializeField] private InputActionReference reloadAction;
 
     public Vector2 Move { get; private set; }
     public Vector2 Look { get; private set; }
     public bool BoostHeld { get; private set; }
     public bool ShootHeld { get; private set; }
     public bool AbilityPressedThisFrame { get; private set; }
+    public bool ReloadPressedThisFrame { get; private set; }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -41,6 +43,7 @@ public class InputManager : MonoBehaviour
         ShootHeld = shootAction.action.IsPressed();
 
         AbilityPressedThisFrame = abilityAction.action.WasPressedThisFrame();
+        ReloadPressedThisFrame = reloadAction.action.WasPressedThisFrame();
     }
 
     public bool ConsumeAbilityPressed()

@@ -53,11 +53,21 @@ public class MapGenerator : MonoBehaviour
     public int obstacleCount = 10;
     public float obstacleDist = 3;
 
-    private List<GameObject> obstaclePOIs;
+    private List<GameObject> obstacles;
+
+    [Header("Forest Parameters")]
+    public float coverage = 0.2f;
+    public float density = 0.5f;
+
+    public GameObject[] treePrefabs;
+
+    private List<GameObject> trees;
 
     [Header("Spawn Parameters")]
     public int spawnCount = 16;
     public float spawnDistance = 5;
+
+
 
     private List<GameObject> spawnPoints;
 
@@ -183,19 +193,32 @@ public class MapGenerator : MonoBehaviour
         /*
          * Find obstacle POIs by selecting random locations on the map that are not too close to water POIs or each other.
          */
-        if (obstaclePOIs != null)
+        if (obstacles != null)
         {
-            for (int i = 0; i < obstaclePOIs.Count; i++)
+            for (int i = 0; i < obstacles.Count; i++)
             {
-                Destroy(obstaclePOIs[i].gameObject);
+                Destroy(obstacles[i].gameObject);
             }
         }
         attempts = 0;
-        obstaclePOIs = new List<GameObject>();
-        while (obstaclePOIs.Count < obstacleCount && attempts++ < 10000)
+        obstacles = new List<GameObject>();
+        while (obstacles.Count < obstacleCount && attempts++ < 10000)
         {
             GenerateObstaclePOI();
         }
+
+        /*
+         * Create forest patches by generating a noise map and placing trees based on a percentage of coverage and density.
+         */
+        if (trees != null)
+        {
+            for (int i = 0; i < trees.Count; i++)
+            {
+                Destroy(trees[i].gameObject);
+            }
+        }
+        trees = new List<GameObject>();
+        CreateForests();
     }
 
     private void GenerateObstaclePOI()
@@ -208,10 +231,10 @@ public class MapGenerator : MonoBehaviour
         if (CheckProximity(obstaclePos) == false)
         {
             GameObject obstacle = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            obstacle.name = "Rock_" + obstaclePOIs.Count;
+            obstacle.name = "Rock_" + obstacles.Count;
             obstacle.transform.position = obstaclePos + new Vector3(0, 0.5f, 0);
             obstacle.transform.rotation = mesh.normals[GetIndexAtLocation(ox, oz)] != Vector3.up ? Quaternion.FromToRotation(Vector3.up, mesh.normals[GetIndexAtLocation(ox, oz)]) : Quaternion.identity;
-            obstaclePOIs.Add(obstacle);
+            obstacles.Add(obstacle);
         }
     }
 
@@ -274,6 +297,27 @@ public class MapGenerator : MonoBehaviour
         waterCenters.Add(new Vector3(lowPoint.x, 0f, lowPoint.z));
     }
 
+    private void CreateForests()
+    {
+        for (int x = border; x < xSize - border; x++)
+        {
+            for (int z = border; z < zSize - border; z++)
+            {
+                float noiseValue = Mathf.PerlinNoise(x * frequency, z * frequency);
+                Debug.Log(noiseValue);
+                if (noiseValue < 1 - coverage) continue;
+                if (Random.Range(0f, 1f) < density)
+                {
+                    Vector3 treePos = new Vector3(x + Random.Range(-0.5f, 0.5f), verts[GetIndexAtLocation(x, z)].y + Random.Range(-0.3f, 0f), z + Random.Range(-0.5f, 0.5f));
+                    GameObject treePrefab = treePrefabs[Random.Range(0, treePrefabs.Length)];
+                    GameObject tree = Instantiate(treePrefab, treePos, Quaternion.identity);
+                    tree.name = "Tree_" + trees.Count;
+                    trees.Add(tree);
+                }
+            }
+        }
+    }
+
     private bool[,] FloodFillBasinVertices(int sx, int sz, float waterLevel)
     {
         bool[,] basin = new bool[xSize + 1, zSize + 1];
@@ -282,8 +326,6 @@ public class MapGenerator : MonoBehaviour
         Queue<(int x, int z)> q = new Queue<(int x, int z)>();
         q.Enqueue((sx, sz));
         visited[sx, sz] = true;
-
-        Debug.Log("Started Flood Filling Basin at: " + sx + ", " + sz + " with water level: " + waterLevel);
 
         while (q.Count > 0)
         {
@@ -305,7 +347,6 @@ public class MapGenerator : MonoBehaviour
         for (int z = 0; z <= zSize; z++) if (basin[0, z] || basin[xSize, z]) borderHits++;
         for (int x = 0; x <= xSize; x++) if (basin[x, 0] || basin[x, zSize]) borderHits++;
 
-        Debug.Log($"Basin border hits: {borderHits}");
 
         return basin;
 
@@ -347,11 +388,11 @@ public class MapGenerator : MonoBehaviour
                 }
             }
         }
-        if (obstaclePOIs != null && obstaclePOIs.Count > 0)
+        if (obstacles != null && obstacles.Count > 0)
         {
-            for (int i = 0; i < obstaclePOIs.Count; i++)
+            for (int i = 0; i < obstacles.Count; i++)
             {
-                if (Vector3.Distance(point, obstaclePOIs[i].transform.position) < obstacleDist) // Ensure spawn point is not too close to obstacles
+                if (Vector3.Distance(point, obstacles[i].transform.position) < obstacleDist) // Ensure spawn point is not too close to obstacles
                 {
                     tooClose = true;
                     break;

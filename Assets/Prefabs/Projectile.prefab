@@ -153,4 +153,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acd4533eb9a38ff4eafac61399db2af5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileOffline
-  lifeTime: 4

@@ -6,8 +6,6 @@ public class ProjectileOffline : MonoBehaviour
     private float speed;
     private GameObject owner;
 
-    [SerializeField] private float lifeTime = 4f;
-
     private Rigidbody rb;
 
     public void Init(float damage, float speed, GameObject owner)
@@ -17,7 +15,6 @@ public class ProjectileOffline : MonoBehaviour
         this.owner = owner;
 
         rb = GetComponent<Rigidbody>();
-        Destroy(gameObject, lifeTime);
     }
 
     // Update is called once per frame

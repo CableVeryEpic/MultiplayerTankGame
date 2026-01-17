@@ -28,12 +28,8 @@ public class WaterMarchingSquares
 
         if (segments.Count < 3) return null;
 
-        Debug.Log("Segment count: " + segments.Count);
-
         var loops = BuildLoops(segments, quantSize);
         if (loops.Count == 0) return null;
-
-        Debug.Log("Loop count: " + loops.Count);
 
         var largestLoop = SelectLargestLoop(loops);
         if (largestLoop.Count < 3) return null;
@@ -41,13 +37,9 @@ public class WaterMarchingSquares
         CleanupPolygon(largestLoop);
         if (largestLoop.Count < 3) return null;
 
-        Debug.Log("Largest loop vert count: " + largestLoop.Count);
-
         if (SignedArea(largestLoop) < 0f) largestLoop.Reverse();
 
         if (!EarClipTriangulate(largestLoop, out List<int> indices)) return null;
-
-        Debug.Log("Index count: " + indices.Count);
 
         var mesh = new Mesh();
         var verts3 = new Vector3[largestLoop.Count];
@@ -295,7 +287,6 @@ public class WaterMarchingSquares
             else if (d == 2) deg2++;
             else degOther++;
         }
-        Debug.Log($"Water contour degrees: deg1={deg1}, deg2={deg2}, other={degOther}, nodes={adj.Count}");
 
         return loops;
     }
