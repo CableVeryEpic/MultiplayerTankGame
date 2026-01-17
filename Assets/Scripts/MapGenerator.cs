@@ -25,6 +25,8 @@ public class MapGenerator : MonoBehaviour
     public float amplitudeModifier = 1;
     public float maskSize = 50;
 
+    private Vector3 center;
+
     [Header("Hill Parameters")]
     public float ringRadius = 25f;
     public float ringWidth = 10f;
@@ -32,13 +34,33 @@ public class MapGenerator : MonoBehaviour
     public float ringPower = 2f;
     public Vector2 ringCenterOffset = Vector2.zero;
 
-    [Header("POI Parameters")]
-    public int POICount = 5;
+    private float globalMinY;
+
+    [Header("Water POI Parameters")]
+    public int waterPOICount = 5;
     public int border = 5;
     public float waterDist = 5;
     public float waterHeight = 0.5f;
+    public float maxWaterLevel = 2.5f;
+    public float waterSink = 0.03f;
+    public Material waterMat;
 
-    private List<List<Vector3>> waterPOIs;
+    private List<GameObject> waterSurfaces;
+    private List<Vector3> waterCenters;
+    private PriorityQueue<Vector3, float> minHeights;
+
+    [Header("Obstacle POI Parameters")]
+    public int obstacleCount = 10;
+    public float obstacleDist = 3;
+
+    private List<GameObject> obstaclePOIs;
+
+    [Header("Spawn Parameters")]
+    public int spawnCount = 16;
+    public float spawnDistance = 5;
+
+    private List<GameObject> spawnPoints;
+
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -51,6 +73,10 @@ public class MapGenerator : MonoBehaviour
         mesh = new Mesh();
         mf.mesh = mesh;
 
+        center = new Vector3(xSize / 2, 0, zSize / 2);
+
+        globalMinY = float.MaxValue;
+
         CreateMap();
     }
 
@@ -58,56 +84,52 @@ public class MapGenerator : MonoBehaviour
     {
         CreateMesh();
         UpdateMesh();
+        PopulateMap();
+        CreateSpawnPoints();
     }
 
     private void CreateMesh()
     {
-        PriorityQueue<Vector3, float> minHeights = new PriorityQueue<Vector3, float>();
+
+        /*
+         * Create the vertices for each point in the grid, using Perlin noise for height values
+         * Also populate the min-heap with height values for water POI selection
+         */
         verts = new Vector3[(xSize + 1) * (zSize + 1)];
-        float seed = Random.Range(Random.Range(-1000f, 1000f), Random.Range(-1000f, 1000f));
+        minHeights = new PriorityQueue<Vector3, float>();
+        float seed = Random.Range(Random.Range(-1000f, 1000f), Random.Range(-1000f, 1000f)); // Generate a random seed for noise generation. Will change this for something else later
         for (int i = 0, z = 0; z <= zSize; z++)
         {
             for (int x = 0; x <= xSize; x++)
             {
-                float y = Mathf.PerlinNoise((x + seed) * frequency, (z + seed) * frequency) * amplitude;
+                float y = Mathf.PerlinNoise((x + seed) * frequency, (z + seed) * frequency) * amplitude; // Set the first octave of perlin noise
+                // Add additional octaves
                 for (int o = 1; o < octaves; o++)
                 {
                     float freq = frequency * (o + frequencyModifier);
                     float amp = amplitude / (o + amplitudeModifier);
                     y += Mathf.PerlinNoise((x + seed) * freq, (z + seed) * freq) * amp;
                 }
-                y += HeightMask(x, z);
-                minHeights.Enqueue(new Vector3(x, y, z), y);
+                y += HeightMask(x, z); // Apply height mask for hill/ring formation
+
+                bool inBounds = x > border && x < xSize - border && z > border && z < zSize - border; // Checking if POI is inside the bounds of the map
+                if (inBounds && y < maxWaterLevel)
+                {
+                    minHeights.Enqueue(new Vector3(x, y, z), y); // Add to min-heap for water POI selection
+                }
+
                 verts[i] = new Vector3(x, y, z);
                 i++;
             }
         }
 
-        waterPOIs = new List<List<Vector3>>();
-        while (waterPOIs.Count < POICount && minHeights.Count > 0)
-        {
-            Vector3 nextMin = minHeights.Dequeue();
-            bool tooClose = false;
-            for (int i = 0; i < waterPOIs.Count; i++)
-            {
-                bool inBounds = nextMin.x > border && nextMin.x < xSize - border && nextMin.z > border && nextMin.z < zSize - border;
-                if (i + 1 > waterPOIs.Count || Vector3.Distance(nextMin, waterPOIs[i][0]) < waterDist || !inBounds)
-                {
-                    tooClose = true;
-                    break;
-                }
-            }
-            if (!tooClose)
-            {
-                List<Vector3> newPOI = MarkPool(nextMin);
-                waterPOIs.Add(newPOI);
-            }
-        }
-
+        /*
+         * Create triangles for the mesh based on the vertices
+         */
         tris = new int[xSize * zSize * 6];
-        for (int t = 0, v = 0, z = 0; z < xSize; z++)
+        for (int t = 0, v = 0, z = 0; z < zSize; z++)
         {
-            for (int x = 0; x < zSize; x++)
+            for (int x = 0; x < xSize; x++)
             {
                 tris[t + 0] = v + 0;
                 tris[t + 1] = v + xSize + 1;
@@ -121,6 +143,8 @@ public class MapGenerator : MonoBehaviour
             }
             v++;
         }
+
+       
     }
 
     private void UpdateMesh()
@@ -132,42 +156,209 @@ public class MapGenerator : MonoBehaviour
         mc.sharedMesh = mesh;
     }
 
-    private List<Vector3> MarkPool(Vector3 startPoint) 
-    {
-        int sx = Mathf.RoundToInt(startPoint.x);
-        int sz = Mathf.RoundToInt(startPoint.z);
-
-
-        float startHeight = startPoint.y;
-        float targetHeight = startHeight + waterHeight;
-
-        List<Vector3> newPOI = new List<Vector3>();
-        bool[,] visited = new bool[xSize + 1, zSize + 1];
-
-        dfs(newPOI, visited, sx, sz, targetHeight);
-        return newPOI;
-    }
-
-    private void dfs(List<Vector3> POI, bool[,] visited, int x, int z, float targetHeight)
-    {
-        if (x < 0 || x >= xSize ||  
-            z < 0 || z >= zSize ||
-            visited[x, z])
+    private void PopulateMap()
+    { 
+        /*
+         * Find water POIs by selecting the lowest height values from the min-heap while ensuring they are not too close to each other and in bounds of the map.
+         * Then marking pool areas around those POIs.
+         */
+        if (waterSurfaces != null)
         {
-            return;
+            for (int i = 0; i < waterSurfaces.Count; i++)
+            {
+                Destroy(waterSurfaces[i].gameObject);
+            }
+        }
+        waterSurfaces = new List<GameObject>();
+        waterCenters = new List<Vector3>();
+
+        int attempts = 0;
+        while (waterSurfaces.Count < waterPOICount && minHeights.Count > 0 && attempts++ < 10000)
+        {
+            Vector3 nextMin = minHeights.Dequeue();
+            if (CheckProximity(nextMin)) continue;
+            CreateWaterMeshSurface(nextMin);
         }
 
-        float y = verts[GetIndexAtLocation(x, z)].y;
-        if (y > targetHeight) return;
+        /*
+         * Find obstacle POIs by selecting random locations on the map that are not too close to water POIs or each other.
+         */
+        if (obstaclePOIs != null)
+        {
+            for (int i = 0; i < obstaclePOIs.Count; i++)
+            {
+                Destroy(obstaclePOIs[i].gameObject);
+            }
+        }
+        attempts = 0;
+        obstaclePOIs = new List<GameObject>();
+        while (obstaclePOIs.Count < obstacleCount && attempts++ < 10000)
+        {
+            GenerateObstaclePOI();
+        }
+    }
 
-        visited[x, z] = true;
+    private void GenerateObstaclePOI()
+    {
+        int ox = Random.Range(border, xSize - border);
+        int oz = Random.Range(border, zSize - border);
 
-        POI.Add(new Vector3(x, y, z));
+        Vector3 obstaclePos = new Vector3(ox, verts[GetIndexAtLocation(ox, oz)].y, oz);
 
-        dfs(POI, visited, x + 1, z, targetHeight);
-        dfs(POI, visited, x - 1, z, targetHeight);
-        dfs(POI, visited, x, z + 1, targetHeight);
-        dfs(POI, visited, x, z - 1, targetHeight);
+        if (CheckProximity(obstaclePos) == false)
+        {
+            GameObject obstacle = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            obstacle.name = "Rock_" + obstaclePOIs.Count;
+            obstacle.transform.position = obstaclePos + new Vector3(0, 0.5f, 0);
+            obstacle.transform.rotation = mesh.normals[GetIndexAtLocation(ox, oz)] != Vector3.up ? Quaternion.FromToRotation(Vector3.up, mesh.normals[GetIndexAtLocation(ox, oz)]) : Quaternion.identity;
+            obstaclePOIs.Add(obstacle);
+        }
+    }
+
+    private void CreateSpawnPoints()
+    {
+        spawnPoints = new List<GameObject>();
+        while (spawnPoints.Count < spawnCount)
+        {
+            int randomX = Random.Range(border, xSize - border);
+            int randomZ = Random.Range(border, zSize - border);
+            Vector3 spawnPos = new Vector3(randomX, verts[GetIndexAtLocation(randomX, randomZ)].y, randomZ);
+
+            if (CheckProximity(spawnPos) == false)
+            {
+                GameObject sp = new GameObject();
+                sp.name = "SpawnPoint_" + spawnPoints.Count;
+                sp.transform.position = spawnPos;
+                sp.transform.position += Vector3.up * 0.2f;
+
+                Vector3 centerDir = center - sp.transform.position;
+                centerDir.y = 0;
+
+                sp.transform.rotation = Quaternion.LookRotation(centerDir.normalized, Vector3.up);
+                sp.transform.rotation *= Quaternion.Euler(0, Random.Range(-15f, 15f), 0);
+                spawnPoints.Add(sp);
+            }
+        }
+    }
+
+    private void CreateWaterMeshSurface(Vector3 lowPoint)
+    {
+        int sx = Mathf.RoundToInt(lowPoint.x);
+        int sz = Mathf.RoundToInt(lowPoint.z);
+
+        float waterLevel = lowPoint.y + waterHeight;
+
+        bool[,] basin = FloodFillBasinVertices(sx, sz, waterLevel);
+
+        Mesh waterMesh = WaterMarchingSquares.BuildWaterMesh(xSize, zSize, basin, (x, z) => verts[GetIndexAtLocation(x, z)].y, waterLevel - waterSink);
+
+        if (waterMesh == null)
+            return;
+
+        GameObject water = new GameObject($"Water_{waterSurfaces.Count}");
+        water.transform.position = Vector3.zero;
+        water.transform.rotation = Quaternion.identity;
+
+        MeshFilter mfWater = water.AddComponent<MeshFilter>();
+        MeshRenderer mrWater = water.AddComponent<MeshRenderer>();
+        MeshCollider mcWater = water.AddComponent<MeshCollider>();
+
+        mfWater.sharedMesh = waterMesh;
+        mrWater.sharedMaterial = waterMat;
+
+        mcWater.sharedMesh = waterMesh;
+        mcWater.convex = true;
+        mcWater.isTrigger = true;
+
+        waterSurfaces.Add(water);
+        waterCenters.Add(new Vector3(lowPoint.x, 0f, lowPoint.z));
+    }
+
+    private bool[,] FloodFillBasinVertices(int sx, int sz, float waterLevel)
+    {
+        bool[,] basin = new bool[xSize + 1, zSize + 1];
+        bool[,] visited = new bool[xSize + 1, zSize + 1];
+
+        Queue<(int x, int z)> q = new Queue<(int x, int z)>();
+        q.Enqueue((sx, sz));
+        visited[sx, sz] = true;
+
+        Debug.Log("Started Flood Filling Basin at: " + sx + ", " + sz + " with water level: " + waterLevel);
+
+        while (q.Count > 0)
+        {
+            var (x, z) = q.Dequeue();
+
+            float h = verts[GetIndexAtLocation(x, z)].y;
+            if (h >= waterLevel) continue;
+
+            basin[x, z] = true;
+
+            TryEnqueue(x + 1, z);
+            TryEnqueue(x - 1, z);
+            TryEnqueue(x, z + 1);
+            TryEnqueue(x, z - 1);
+
+        }
+
+        int borderHits = 0;
+        for (int z = 0; z <= zSize; z++) if (basin[0, z] || basin[xSize, z]) borderHits++;
+        for (int x = 0; x <= xSize; x++) if (basin[x, 0] || basin[x, zSize]) borderHits++;
+
+        Debug.Log($"Basin border hits: {borderHits}");
+
+        return basin;
+
+        void TryEnqueue(int x, int z)
+        {
+            if (x < 0 || x > xSize || z < 0 || z > zSize) return;
+            if (visited[x, z]) return;
+            visited[x, z] = true;
+            q.Enqueue((x, z));
+        }
+    }
+
+
+
+    private bool CheckProximity(Vector3 point)
+    {
+        bool tooClose = false;
+        if (spawnPoints != null && spawnPoints.Count > 0)
+        {
+            for (int i = 0; i < spawnPoints.Count; i++)
+            {
+                if (Vector3.Distance(point, spawnPoints[i].transform.position) < spawnDistance || Vector3.Distance(point, center) < 5) // Ensure spawn point is not too close to other spawn points
+                {
+                    tooClose = true;
+                    break;
+                }
+            }
+        }
+        if (waterCenters != null && waterCenters.Count > 0)
+        {
+            for (int i = 0; i < waterCenters.Count; i++)
+            {
+                Vector3 c = waterCenters[i];
+                c.y = point.y;
+                if (Vector3.Distance(point, c) < waterDist) // Ensure spawn point is not too close to water POIs
+                {
+                    tooClose = true;
+                    break;
+                }
+            }
+        }
+        if (obstaclePOIs != null && obstaclePOIs.Count > 0)
+        {
+            for (int i = 0; i < obstaclePOIs.Count; i++)
+            {
+                if (Vector3.Distance(point, obstaclePOIs[i].transform.position) < obstacleDist) // Ensure spawn point is not too close to obstacles
+                {
+                    tooClose = true;
+                    break;
+                }
+            }
+        }
+        return tooClose;
     }
 
     private int GetIndexAtLocation(int x, int z)
@@ -198,17 +389,5 @@ public class MapGenerator : MonoBehaviour
     {
         t = Mathf.Clamp01(t);
         return t * t * (3f - 2f * t);
-    }
-
-    private void OnDrawGizmos()
-    {
-        for (int n = 0; n < waterPOIs.Count; n++)
-        {
-            for (int k = 0; k < waterPOIs[n].Count; k++)
-            {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawSphere(waterPOIs[n][k], 0.3f);
-            }
-        }
     }
 }

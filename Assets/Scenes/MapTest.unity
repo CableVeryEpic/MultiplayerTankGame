@@ -244,6 +244,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &278293685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
+  m_Name: Player/Attack
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
+  m_Asset: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_ActionId: 6c2ab1b8-8984-453a-af3d-a3c78ae1679a
 --- !u!1 &296623884
 GameObject:
   m_ObjectHideFlags: 0
@@ -275,23 +289,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3239a8cd67e1a6a4a905a6597e7b13db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapGenerator
-  xSize: 50
-  zSize: 50
-  frequency: 0.08
-  amplitude: 4
+  xSize: 100
+  zSize: 100
+  frequency: 0.1
+  amplitude: 2.5
   octaves: 2
   frequencyModifier: 1.5
   amplitudeModifier: 1
   maskSize: 40
   ringRadius: 0.99
   ringWidth: 0.5
-  ringHeight: 5
+  ringHeight: 2.5
   ringPower: 2
   ringCenterOffset: {x: 0, y: 0}
-  POICount: 5
-  border: 5
-  waterDist: 5
-  waterHeight: 0.3
+  waterPOICount: 1
+  border: 15
+  waterDist: 2
+  waterHeight: 0.01
+  waterSink: 0.03
+  waterMat: {fileID: 2100000, guid: e961bc5e1ab3d384db8dcaffbf70a3b6, type: 2}
+  obstacleCount: 0
+  obstacleDist: 3
+  spawnCount: 0
+  spawnDistance: 5
 --- !u!23 &296623886
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -364,20 +384,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &298689264
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
-  m_Name: Player/Attack
-  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
-  m_Asset: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  m_ActionId: 6c2ab1b8-8984-453a-af3d-a3c78ae1679a
 --- !u!1 &319812355
 GameObject:
   m_ObjectHideFlags: 0
@@ -511,20 +517,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 319812355}
   m_CullTransparentMesh: 1
---- !u!114 &380529712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
-  m_Name: Player/Sprint
-  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
-  m_Asset: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  m_ActionId: 641cd816-40e6-41b4-8c3d-04687c349290
 --- !u!1 &791442858
 GameObject:
   m_ObjectHideFlags: 0
@@ -695,7 +687,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
---- !u!114 &1121250214
+--- !u!114 &1048099911
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -709,6 +701,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
   m_Asset: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_ActionId: 351f2ccd-1f9f-44bf-9bec-d62ac5c5f408
+--- !u!114 &1097234578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1515ab76e54f068e2f2207940fab32, type: 3}
+  m_Name: Player/Sprint
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
+  m_Asset: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_ActionId: 641cd816-40e6-41b4-8c3d-04687c349290
 --- !u!1001 &1171867353
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -804,7 +810,7 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1818418578}
   m_SourcePrefab: {fileID: 100100000, guid: 142caf0fb864f004e9982dca104ec941, type: 3}
---- !u!114 &1242537866
+--- !u!114 &1540350935
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -818,7 +824,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
   m_Asset: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_ActionId: 6b444451-8a00-4d00-a97e-f47457f736a8
---- !u!114 &1475452182
+--- !u!114 &1558375965
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -861,11 +867,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5d83d854fbbd4142ae50c9b1914b073, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputManager
-  shootAction: {fileID: 298689264}
-  lookAction: {fileID: 1242537866}
-  moveAction: {fileID: 1121250214}
-  boostAction: {fileID: 380529712}
-  abilityAction: {fileID: 1475452182}
+  shootAction: {fileID: 278293685}
+  lookAction: {fileID: 1540350935}
+  moveAction: {fileID: 1048099911}
+  boostAction: {fileID: 1097234578}
+  abilityAction: {fileID: 1558375965}
 --- !u!4 &1676503003
 Transform:
   m_ObjectHideFlags: 0
