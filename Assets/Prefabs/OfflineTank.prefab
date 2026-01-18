@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3808037889449881320}
   - component: {fileID: 7138424574141528277}
   - component: {fileID: 3983227920135219358}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: TurretBarrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 6143666035317557080}
   - component: {fileID: 462234308706863915}
   - component: {fileID: 6739531524838173273}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: TurretBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,7 +189,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4187948459597267077}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MuzzleExit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -220,7 +220,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7770136943962444816}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BarrelPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -255,17 +255,17 @@ GameObject:
   - component: {fileID: 558213653206571876}
   - component: {fileID: 4399264142787899695}
   - component: {fileID: 711426079779862948}
-  - component: {fileID: 5996517556875953273}
-  - component: {fileID: 4863069957269165056}
-  - component: {fileID: 5859367439120506321}
-  - component: {fileID: 3036158008718558669}
-  - component: {fileID: 2303973996561284860}
-  - component: {fileID: 7929870738425077638}
   - component: {fileID: 2555116699429839040}
   - component: {fileID: 1455624316567283008}
-  m_Layer: 0
+  - component: {fileID: 5996517556875953273}
+  - component: {fileID: 4863069957269165056}
+  - component: {fileID: 7929870738425077638}
+  - component: {fileID: 5859367439120506321}
+  - component: {fileID: 2303973996561284860}
+  - component: {fileID: 3036158008718558669}
+  m_Layer: 7
   m_Name: OfflineTank
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -336,6 +336,52 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!136 &2555116699429839040
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4361076506588931693}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.05
+  m_Height: 1
+  m_Direction: 0
+  m_Center: {x: 0, y: -0.47, z: 0.75}
+--- !u!136 &1455624316567283008
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4361076506588931693}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.05
+  m_Height: 1
+  m_Direction: 0
+  m_Center: {x: 0, y: -0.47, z: -0.75}
 --- !u!114 &5996517556875953273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -368,6 +414,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TankHealthOffline
   maxHealth: 100
   armour: 0
+--- !u!114 &7929870738425077638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4361076506588931693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68e68c37ab20e3f4a886102f0fd44032, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TankTurretOffline
+  turretPivot: {fileID: 5739415353636254969}
+  barrelPivot: {fileID: 7770136943962444816}
+  muzzle: {fileID: 4187948459597267077}
+  aimLine: {fileID: 6780409688746404658}
+  aimMarkerPrefab: {fileID: 4442294353759229538, guid: 5474f07aedbe68a4794196ff257b5b8f, type: 3}
+  aimMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  aimLength: 500
+  minPitch: -30
+  maxPitch: 45
+  yawSpeed: 130
+  pitchSpeed: 130
 --- !u!114 &5859367439120506321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,19 +456,9 @@ MonoBehaviour:
   fireRate: 1
   damage: 25
   projectileSpeed: 40
---- !u!114 &3036158008718558669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4361076506588931693}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2916961534a868b47aa83c39eae2a979, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TankAbilityOffline
-  cooldownSeconds: 5
+  ammoCapacity: 32
+  magCapacity: 1
+  reloadTime: 2
 --- !u!114 &2303973996561284860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -483,9 +544,13 @@ MonoBehaviour:
     m_RotationOrder: 4
   boostDuration: 2
   maxSpeedToBoost: 1
+  mudSpeedMult: 0.7
+  mudAccelMult: 0.4
+  mudBrakeMult: 1.15
+  mudTurnMult: 0.85
   profile: 0
   boostAvailable: 0
---- !u!114 &7929870738425077638
+--- !u!114 &3036158008718558669
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -494,68 +559,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4361076506588931693}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68e68c37ab20e3f4a886102f0fd44032, type: 3}
+  m_Script: {fileID: 11500000, guid: 2916961534a868b47aa83c39eae2a979, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TankTurretOffline
-  turretPivot: {fileID: 5739415353636254969}
-  barrelPivot: {fileID: 7770136943962444816}
-  muzzle: {fileID: 4187948459597267077}
-  aimLine: {fileID: 6780409688746404658}
-  aimMarkerPrefab: {fileID: 4442294353759229538, guid: 5474f07aedbe68a4794196ff257b5b8f, type: 3}
-  aimMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  aimLength: 500
-  minPitch: -30
-  maxPitch: 45
-  yawSpeed: 130
-  pitchSpeed: 130
---- !u!136 &2555116699429839040
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4361076506588931693}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.05
-  m_Height: 1
-  m_Direction: 0
-  m_Center: {x: 0, y: -0.47, z: 0.75}
---- !u!136 &1455624316567283008
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4361076506588931693}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.05
-  m_Height: 1
-  m_Direction: 0
-  m_Center: {x: 0, y: -0.47, z: -0.75}
+  m_EditorClassIdentifier: Assembly-CSharp::TankAbilityOffline
+  cooldownSeconds: 5
 --- !u!1 &5078818849887547964
 GameObject:
   m_ObjectHideFlags: 0
@@ -567,7 +574,7 @@ GameObject:
   - component: {fileID: 2361499471246938596}
   - component: {fileID: 8801650031278635131}
   - component: {fileID: 8266791957866912190}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -655,7 +662,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5739415353636254969}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: TurretPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -689,7 +696,7 @@ GameObject:
   m_Component:
   - component: {fileID: 361383685289837930}
   - component: {fileID: 6780409688746404658}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AimLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}

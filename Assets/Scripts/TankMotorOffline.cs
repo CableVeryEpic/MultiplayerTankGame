@@ -1,5 +1,4 @@
-using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine; 
 
 [RequireComponent(typeof(Rigidbody))]
 public class TankMotorOffline : MonoBehaviour
@@ -23,6 +22,19 @@ public class TankMotorOffline : MonoBehaviour
 
     private bool boostHeld;
 
+    [Header("Zone Modifiers")]
+    public float mudSpeedMult = 0.7f;
+    public float mudAccelMult = 0.4f;
+    public float mudBrakeMult = 1.15f;
+    public float mudTurnMult = 0.85f;
+
+    private int waterCount;
+    private bool InMud => waterCount > 0;
+    private bool lastInMud;
+
+    public void EnterMud() { waterCount++; }
+    public void ExitMud() { waterCount = Mathf.Max(0, waterCount - 1); }
+
     // Profile Stuff
     public enum ProfileType { None, ForwardAccel, ReverseAccel, Boost }
     [HideInInspector] public ProfileType profile = ProfileType.None;
@@ -41,6 +53,7 @@ public class TankMotorOffline : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        lastInMud = InMud;
     }
 
     private void Update()
@@ -56,11 +69,20 @@ public class TankMotorOffline : MonoBehaviour
         float dt = Time.fixedDeltaTime;
         float now = Time.time;
 
+        float speedMult = InMud ? mudSpeedMult : 1f;
+        float accelMult = InMud ? mudAccelMult : 1f;
+        float brakeMult = InMud ? mudBrakeMult : 1f;
+        float turnMult = InMud ? mudTurnMult : 1f;
+
+        float effectiveMaxSpeed = maxSpeed * speedMult;
+        float effectiveBrake = brake * brakeMult;
+        float effectiveTurnSpeedDeg = turnSpeedDeg * turnMult;
+
         int turn = 0;
         if (move.x > 0.5f) turn = 1;
         else if (move.x < -0.5f) turn = -1;
 
-        float yaw = turn * turnSpeedDeg * dt;
+        float yaw = turn * effectiveTurnSpeedDeg * dt;
         rb.MoveRotation(rb.rotation * Quaternion.Euler(0f, yaw, 0f));
 
         int throttle = 0;
@@ -70,14 +92,20 @@ public class TankMotorOffline : MonoBehaviour
         bool forwardHeld = throttle == 1;
         bool canStartBoost = boostHeld && forwardHeld && Mathf.Abs(currentSpeed) <= maxSpeedToBoost;
 
+        if (InMud != lastInMud && profile != ProfileType.None)
+        {
+            RetargetActiveProfile(now, effectiveMaxSpeed, accelMult);
+            lastInMud = InMud;
+        }
+
         if (profile == ProfileType.Boost && (!boostHeld || !forwardHeld))
         {
-            StartForwardAccel(now);
+            StartForwardAccel(now, effectiveMaxSpeed, accelMult);
         }
 
         if (profile != ProfileType.Boost && canStartBoost)
         {
-            StartBoost(now);
+            StartBoost(now, effectiveMaxSpeed);
         }
 
         if (profile != ProfileType.Boost)
@@ -85,17 +113,17 @@ public class TankMotorOffline : MonoBehaviour
             if (throttle == 0)
             {
                 profile = ProfileType.None;
-                currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, brake * dt);
+                currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, effectiveBrake * dt);
             }
             else if (throttle > 0)
             {
                 if (profile != ProfileType.ForwardAccel)
-                    StartForwardAccel(now);
+                    StartForwardAccel(now, effectiveMaxSpeed, accelMult);
             }
             else
             {
                 if (profile != ProfileType.ReverseAccel)
-                    StartReverseAccel(now);
+                    StartReverseAccel(now, effectiveMaxSpeed, accelMult);
             }
         }
 
@@ -113,8 +141,8 @@ public class TankMotorOffline : MonoBehaviour
 
             if (t >= 1f && profile == ProfileType.Boost)
             {
-                StartForwardAccel(now);
-                currentSpeed = profileTargetSpeed = currentSpeed;
+                StartForwardAccel(now, effectiveMaxSpeed, accelMult);
+                profileStartSpeed = currentSpeed;
             }
         }
 
@@ -123,36 +151,55 @@ public class TankMotorOffline : MonoBehaviour
         rb.linearVelocity = new Vector3(v.x, rb.linearVelocity.y, v.z);
     }
 
-    private void StartForwardAccel(float now)
+    private void RetargetActiveProfile(float now, float effectiveMaxSpeed, float accelMult)
+    {
+        switch (profile)
+        {
+            case ProfileType.ForwardAccel:
+                StartForwardAccel(now, effectiveMaxSpeed, accelMult ); 
+                break;
+            case ProfileType.ReverseAccel:
+                StartReverseAccel(now, effectiveMaxSpeed, accelMult );
+                break;
+            case ProfileType.Boost:
+                StartBoost(now, effectiveMaxSpeed);
+                break;
+        }
+    }
+
+    private void StartForwardAccel(float now, float effectiveMaxSpeed, float accelMult)
     {
         profile = ProfileType.ForwardAccel;
         profileStartTime = now;
-        profileDuration = Mathf.Max(0.01f, accelDuration);
+
+        profileDuration = Mathf.Max(0.01f, accelDuration / Mathf.Max(0.01f, accelMult));
         profileCurve = accelerationCurve;
 
         profileStartSpeed = currentSpeed;
-        profileTargetSpeed = maxSpeed;
+        profileTargetSpeed = effectiveMaxSpeed;
     }
 
-    private void StartReverseAccel(float now)
+    private void StartReverseAccel(float now, float effectiveMaxSpeed, float accelMult)
     {
         profile = ProfileType.ReverseAccel;
         profileStartTime = now;
-        profileDuration = Mathf.Max(0.01f, accelDuration);
+
+        profileDuration = Mathf.Max(0.01f, accelDuration / Mathf.Max(0.01f, accelMult));
         profileCurve = accelerationCurve;
 
         profileStartSpeed = currentSpeed;
-        profileTargetSpeed = -maxSpeed;
+        profileTargetSpeed = -effectiveMaxSpeed;
     }
 
-    private void StartBoost(float now)
+    private void StartBoost(float now, float effectiveMaxSpeed)
     {
         profile = ProfileType.Boost;
         profileStartTime = now;
+
         profileDuration = Mathf.Max(0.01f, boostDuration);
         profileCurve = boostAccelerationCurve;
 
         profileStartSpeed = currentSpeed;
-        profileTargetSpeed = maxSpeed;
+        profileTargetSpeed = effectiveMaxSpeed;
     }
 }

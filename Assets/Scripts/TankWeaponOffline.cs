@@ -21,21 +21,19 @@ public class TankWeaponOffline : MonoBehaviour
 
     private float nextFireTime;
 
+    private Rigidbody rb;
+
     private void Awake()
     {
         currentAmmo = ammoCapacity - magCapacity;
         ammoLoaded = magCapacity;
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
         if (InputManager.Instance == null) return;
-
-        if (InputManager.Instance != null && InputManager.Instance.ShootHeld)
-        {
-            TryFire();
-        }
 
         if (reloading && Time.time >= reloadEndTime)
         {
@@ -69,6 +67,10 @@ public class TankWeaponOffline : MonoBehaviour
 
         var projectile = Instantiate(projectilePrefab, muzzle.position, muzzle.rotation);
         projectile.Init(damage, projectileSpeed, gameObject);
+
+        Vector3 forcePosition = new Vector3(muzzle.position.x, rb.position.y, muzzle.position.z);
+
+        rb.AddForceAtPosition(-muzzle.forward * damage * 0.1f, forcePosition, ForceMode.Impulse);
 
         if (ammoLoaded <= 0)
         {
