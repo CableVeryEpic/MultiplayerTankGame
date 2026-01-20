@@ -3,6 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class TreePhysics : MonoBehaviour
 {
+    public int TreeId { get; private set; }
+    public void Init(int id) => TreeId = id;
     [SerializeField] private float linearSpeedToLock = 0.05f;
     [SerializeField] private float angularSpeedToLock = 2f;
     [SerializeField] private float settleTime = 0.75f;

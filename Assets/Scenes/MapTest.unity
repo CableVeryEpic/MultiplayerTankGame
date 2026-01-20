@@ -270,6 +270,7 @@ GameObject:
   - component: {fileID: 296623887}
   - component: {fileID: 296623886}
   - component: {fileID: 296623885}
+  - component: {fileID: 296623889}
   m_Layer: 0
   m_Name: MapGenerator
   m_TagString: Untagged
@@ -284,7 +285,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 296623884}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3239a8cd67e1a6a4a905a6597e7b13db, type: 3}
   m_Name: 
@@ -309,7 +310,6 @@ MonoBehaviour:
   maxWaterLevel: 1
   waterSink: 0.03
   waterMat: {fileID: 2100000, guid: e961bc5e1ab3d384db8dcaffbf70a3b6, type: 2}
-  waterPhysicsMat: {fileID: 13400000, guid: a9cf0d40e0296c848b967780b3c429d8, type: 2}
   obstacleCount: 8
   obstacleDist: 3
   coverage: 0.3
@@ -390,6 +390,48 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &296623889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 296623884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 554a00f5f29371441aa6029342a2315b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapGeneratorDeterministic
+  waterMat: {fileID: 2100000, guid: e961bc5e1ab3d384db8dcaffbf70a3b6, type: 2}
+  treePrefabs:
+  - {fileID: 894820404907027306, guid: af9f61738c57e90428740c11d7baa8f3, type: 3}
+  generateOnStart: 1
+  config:
+    seed: 0
+    xSize: 100
+    zSize: 100
+    frequency: 0.1
+    amplitude: 2.5
+    octaves: 2
+    frequencyModifier: 0.05
+    amplitudeModifier: 1.5
+    ringRadius: 0.95
+    ringWidth: 0.5
+    ringHeight: 2
+    ringPower: 2
+    ringCenterOffset: {x: 0, y: 0}
+    border: 10
+    waterPOICount: 5
+    waterDist: 6
+    waterHeight: 0.1
+    maxWaterLevel: 1
+    waterSink: 0.03
+    obstacleCount: 10
+    obstacleDist: 2
+    spawnCount: 16
+    spawnDist: 5
+    coverage: 0.2
+    density: 0.5
 --- !u!1 &319812355
 GameObject:
   m_ObjectHideFlags: 0

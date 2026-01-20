@@ -6,13 +6,11 @@ using System;
 public class MapGeneratorDeterministic : MonoBehaviour
 {
     public Material waterMat;
-    public PhysicsMaterial waterPhysicsMat;
     public GameObject[] treePrefabs;
-    public MapConfig testConfig;
 
     [SerializeField] private bool generateOnStart = true;
 
-    private MapConfig config;
+    [SerializeField] private MapConfig config;
 
     private Mesh mesh;
     private MeshFilter mf;
@@ -40,6 +38,8 @@ public class MapGeneratorDeterministic : MonoBehaviour
     }
     private List<LowCandidate> lowCandidates;
 
+    public MapConfig CurrentConfig => config;
+    public void SetConfig(MapConfig cfg) => config = cfg;
     private int NextInt(int minInclusive, int maxExclusive) => rng.Next(minInclusive, maxExclusive);
     private float nextFloat01() => (float)rng.NextDouble();
     private float NextRange(float min, float max) => min + (max - min) * nextFloat01();
@@ -48,7 +48,7 @@ public class MapGeneratorDeterministic : MonoBehaviour
     {
         mr = GetComponent<MeshRenderer>();
         mf = GetComponent<MeshFilter>();
-        mc = gameObject.AddComponent<MeshCollider>();
+        mc = gameObject.GetComponent<MeshCollider>();
         if (mc == null) mc = gameObject.AddComponent<MeshCollider>();
 
         mesh = new Mesh();
@@ -58,7 +58,7 @@ public class MapGeneratorDeterministic : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (generateOnStart) Generate(testConfig);
+        if (generateOnStart) Generate(config);
     }
 
     public void Generate(MapConfig cfg)
@@ -75,6 +75,11 @@ public class MapGeneratorDeterministic : MonoBehaviour
         UpdateMesh();
         PopulateMap();
         CreateSpawnPoints();
+    }
+
+    public void GenerateFromCurrent()
+    {
+        Generate(config);
     }
 
     private void CreateMesh()
@@ -285,7 +290,6 @@ public class MapGeneratorDeterministic : MonoBehaviour
         mrWater.sharedMaterial = waterMat;
 
         mcWater.sharedMesh = waterMesh;
-        mcWater.material = waterPhysicsMat;
         mcWater.convex = true;
         mcWater.isTrigger = true;
 
@@ -312,7 +316,10 @@ public class MapGeneratorDeterministic : MonoBehaviour
                     Vector3 treePos = new Vector3(x + jx, verts[GetIndexAtLocation(x, z)].y + jy, z + jz);
                     GameObject treePrefab = treePrefabs[prefabIndex];
                     GameObject tree = Instantiate(treePrefab, treePos, Quaternion.identity);
-                    tree.name = "Tree_" + trees.Count;
+                    int id = trees.Count;
+
+                    tree.name = "Tree_" + id;
+                    tree.GetComponent<TreePhysics>()?.Init(id);
                     trees.Add(tree);
                 }
             }

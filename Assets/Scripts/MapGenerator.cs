@@ -44,7 +44,6 @@ public class MapGenerator : MonoBehaviour
     public float maxWaterLevel = 2.5f;
     public float waterSink = 0.03f;
     public Material waterMat;
-    public PhysicsMaterial waterPhysicsMat;
 
     private List<GameObject> waterSurfaces;
     private List<Vector3> waterCenters;
@@ -67,8 +66,6 @@ public class MapGenerator : MonoBehaviour
     [Header("Spawn Parameters")]
     public int spawnCount = 16;
     public float spawnDistance = 5;
-
-
 
     private List<GameObject> spawnPoints;
 
@@ -292,7 +289,6 @@ public class MapGenerator : MonoBehaviour
         mrWater.sharedMaterial = waterMat;
 
         mcWater.sharedMesh = waterMesh;
-        mcWater.material = waterPhysicsMat;
         mcWater.convex = true;
         mcWater.isTrigger = true;
 

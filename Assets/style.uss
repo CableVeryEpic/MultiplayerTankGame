@@ -1,0 +1,14 @@
+:root {
+}
+
+.size > .unity-label {
+    min-width: 5%;
+}
+
+#Main > #SettingsBox > #RingBox > #Offset > .unity-vector2-field__input > .unity-composite-field__field-spacer {
+    display: none;
+}
+
+#Main > #SettingsBox > #RingBox > #Offset > .unity-vector2-field__input > #unity-y-input {
+    margin-right: 3px;
+}

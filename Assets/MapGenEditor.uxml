@@ -1,0 +1,60 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Assets/style.uss?fileID=7433441132597879392&amp;guid=a02e5fd89f882fe4e91749a3f5745398&amp;type=3#style"/>
+    <ui:VisualElement name="Main" style="flex-grow: 1;">
+        <ui:Label text="Map Generation Settings" name="Header"/>
+        <ui:GroupBox name="SettingsBox" style="flex-grow: 0; margin-top: 0;">
+            <ui:IntegerField label="Seed" value="42" name="SeedField" binding-path="config.seed" style="margin-bottom: 10px; margin-top: 5px; margin-left: 3px;"/>
+            <ui:SliderInt label="Border" value="5" high-value="20" name="Border" show-input-field="true" binding-path="config.border" style="margin-left: 3px; margin-bottom: 10px;"/>
+            <ui:Label text="Map Size:" name="Size"/>
+            <ui:GroupBox name="SizeBox" style="flex-direction: row; flex-shrink: 0; align-self: auto; justify-content: flex-start; padding-left: 0; margin-left: 3px; align-items: stretch; flex-grow: 0; max-width: 100%; align-content: auto; flex-basis: auto; width: 100%;">
+                <ui:SliderInt label="X" value="100" high-value="200" page-size="0" show-input-field="true" name="XSlider" binding-path="config.xSize" class="size" style="flex-direction: row; justify-content: center; flex-grow: 1;"/>
+                <ui:SliderInt label="Z" value="100" high-value="200" page-size="0" show-input-field="true" name="ZSlider" binding-path="config.zSize" class="size" style="flex-grow: 1;"/>
+            </ui:GroupBox>
+            <ui:Label text="Noise Settings:" name="Noise"/>
+            <ui:GroupBox name="NoiseBox" style="margin-top: 0; padding-top: 0; padding-left: 0;">
+                <ui:GroupBox name="FrequencyBox" style="flex-direction: row; align-content: auto; padding-left: 0; margin-left: 0; margin-right: 0;">
+                    <ui:Slider label="Frequency" value="0.1" high-value="1" name="FreqSlider" show-input-field="true" binding-path="config.frequency" class="size" style="flex-grow: 1;"/>
+                    <ui:Slider label="Mod" value="0.05" high-value="1" name="FreqModSlider" show-input-field="true" binding-path="config.frequencyModifier" class="size" style="flex-grow: 1;"/>
+                </ui:GroupBox>
+                <ui:GroupBox name="AmplitudeBox" style="flex-direction: row; padding-left: 0; margin-left: 0; margin-right: 0;">
+                    <ui:Slider label="Amplitude" value="2" high-value="100" name="AmpSlider" low-value="1" show-input-field="true" binding-path="config.amplitude" class="size" style="flex-grow: 1;"/>
+                    <ui:Slider label="Mod" value="2" high-value="4" name="AmpModSlider" low-value="1" show-input-field="true" binding-path="config.amplitudeModifier" class="size" style="flex-grow: 1;"/>
+                </ui:GroupBox>
+                <ui:SliderInt label="Octaves" value="2" high-value="100" name="OctSlider" low-value="1" show-input-field="true" binding-path="config.octaves" class="size" style="flex-grow: 1;"/>
+            </ui:GroupBox>
+            <ui:Label text="Water Settings:" name="WaterSettings"/>
+            <ui:GroupBox name="WaterBox" style="padding-left: 0; padding-top: 5px;">
+                <ui:SliderInt label="Points" value="5" high-value="6" name="WaterPointsCount" show-input-field="true" low-value="1" fill="false" binding-path="config.waterPOICount"/>
+                <ui:Slider label="Distance" value="6" high-value="10" name="WaterDistance" show-input-field="true" binding-path="config.waterDist"/>
+                <ui:Slider label="Height" value="0.2" high-value="1" name="WaterHeight" inverted="true" low-value="0.1" show-input-field="true" binding-path="config.waterHeight"/>
+                <ui:Slider label="Max Height Level" value="2" high-value="5" name="WaterMaxLevel" inverted="true" low-value="1" show-input-field="true" binding-path="config.maxWaterLevel"/>
+                <ui:Slider label="Terrain Sink" value="0.05" high-value="0.1" name="WaterTerrainSink" inverted="true" show-input-field="true" binding-path="config.waterSink"/>
+            </ui:GroupBox>
+            <ui:Label text="Ring Settings:" name="Ring"/>
+            <ui:GroupBox name="RingBox" style="padding-left: 0;">
+                <ui:Vector2Field label="Offset" name="RingOffset" language-direction="Inherit" binding-path="config.ringCenterOffset" class="offset" style="align-self: auto; justify-content: flex-start; align-items: stretch; flex-grow: 0; align-content: auto; margin-right: 0;"/>
+                <ui:Slider label="Radius" value="0.95" high-value="1" name="RingRadius" show-input-field="true" binding-path="config.ringRadius" class="size"/>
+                <ui:Slider label="Width" value="0.5" high-value="1" show-input-field="true" name="RingWidth" binding-path="config.ringWidth" class="size"/>
+                <ui:Slider label="Height" value="42" high-value="5" show-input-field="true" name="RingHeight" binding-path="config.ringHeight" class="size"/>
+                <ui:Slider label="Power" value="42" high-value="5" show-input-field="true" name="RingPower" binding-path="config.ringPower" class="size"/>
+            </ui:GroupBox>
+            <ui:Label text="Other Spawns:" name="Spawns"/>
+            <ui:Label text="Trees:" name="Trees" style="margin-top: 5px;"/>
+            <ui:GroupBox name="TreeBox" style="padding-left: 0; flex-direction: row;">
+                <ui:Slider label="Coverage" value="0.2" high-value="1" name="Coverage" show-input-field="true" binding-path="config.coverage" class="size" style="flex-grow: 1;"/>
+                <ui:Slider label="Density" value="42" high-value="1" name="Density" show-input-field="true" binding-path="config.density" class="size" style="flex-grow: 1;"/>
+            </ui:GroupBox>
+            <ui:Label text="Obstacles:" name="Obstacles" style="margin-top: 5px;"/>
+            <ui:GroupBox name="ObstacleBox" style="padding-left: 0; flex-direction: row;">
+                <ui:SliderInt label="Count" value="10" high-value="100" name="ObstacleCount" show-input-field="true" binding-path="config.obstacleCount" class="size" style="flex-grow: 1;"/>
+                <ui:Slider label="Distance" value="2" high-value="100" name="ObstacleDistance" show-input-field="true" binding-path="config.obstacleDist" class="size" style="flex-grow: 1;"/>
+            </ui:GroupBox>
+            <ui:Label text="Spawnpoints:" name="Spawnpoints" style="margin-top: 5px;"/>
+            <ui:GroupBox name="SpawnBox" style="padding-left: 0; flex-direction: row;">
+                <ui:SliderInt label="Count" value="16" high-value="100" name="SpawnCount" show-input-field="true" binding-path="config.spawnCount" class="size" style="flex-grow: 1;"/>
+                <ui:Slider label="Distance" value="5" high-value="100" name="SpawnDistance" show-input-field="true" binding-path="config.spawnDist" class="size" style="flex-grow: 1;"/>
+            </ui:GroupBox>
+            <ui:Button text="Generate Map" name="Generate" style="margin-top: 10px;"/>
+        </ui:GroupBox>
+    </ui:VisualElement>
+</ui:UXML>
