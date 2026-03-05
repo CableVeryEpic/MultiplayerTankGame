@@ -2,6 +2,7 @@ using UnityEngine;
 using Utils;
 using System.Collections.Generic;
 using System;
+using Unity.Netcode;
 
 public class MapGeneratorDeterministic : MonoBehaviour
 {
@@ -250,6 +251,8 @@ public class MapGeneratorDeterministic : MonoBehaviour
             {
                 GameObject sp = new GameObject();
                 sp.name = "SpawnPoint_" + spawnPoints.Count;
+                SpawnPoint spComponent = sp.AddComponent<SpawnPoint>();
+                spComponent.Index = spawnPoints.Count;
                 sp.transform.position = spawnPos;
                 sp.transform.position += Vector3.up * 0.2f;
 
@@ -260,6 +263,10 @@ public class MapGeneratorDeterministic : MonoBehaviour
                 sp.transform.rotation *= Quaternion.Euler(0, NextRange(-15f, 15f), 0);
                 spawnPoints.Add(sp);
             }
+        }
+        if (SpawnService.Instance != null && NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer)
+        {
+            SpawnService.Instance.Initialize(config.seed);
         }
     }
 
