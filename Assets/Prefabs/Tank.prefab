@@ -260,10 +260,12 @@ GameObject:
   - component: {fileID: 2555116699429839040}
   - component: {fileID: 1455624316567283008}
   - component: {fileID: -1004624000511605179}
+  - component: {fileID: 5452882643357447425}
+  - component: {fileID: -4546261070954422215}
   - component: {fileID: 5996517556875953273}
-  - component: {fileID: 4863069957269165056}
-  - component: {fileID: 7929870738425077638}
-  - component: {fileID: 5859367439120506321}
+  - component: {fileID: -6889212073495411995}
+  - component: {fileID: -1997752136652836357}
+  - component: {fileID: -8581915899089972532}
   - component: {fileID: -2905557943405449582}
   - component: {fileID: 3036158008718558669}
   - component: {fileID: -8702953377536869833}
@@ -304,7 +306,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3038024214
+  GlobalObjectIdHash: 4258629136
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -476,6 +478,43 @@ MonoBehaviour:
     m_InternalValue: 0
   boostHeld:
     m_InternalValue: 0
+--- !u!114 &5452882643357447425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4361076506588931693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26a492fcc9e1e0546b32ed1c90232a14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TankAimInput
+  ShowTopMostFoldoutHeaderGroup: 1
+  aimHeightOffset: 1
+  aimMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  maxDistance: 500
+  AimPoint:
+    m_InternalValue: {x: 0, y: 0, z: 0}
+--- !u!114 &-4546261070954422215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4361076506588931693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a81715550fa86f54e952d411d5ca6cf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TankAimVisuals
+  ShowTopMostFoldoutHeaderGroup: 1
+  aimLine: {fileID: 6780409688746404658}
+  muzzle: {fileID: 4187948459597267077}
+  aimMarkerPrefab: {fileID: 4442294353759229538, guid: 5474f07aedbe68a4794196ff257b5b8f, type: 3}
+  aimInput: {fileID: 5452882643357447425}
 --- !u!114 &5996517556875953273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -490,11 +529,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Participant
   isPlayerControlled: 0
   disableOnDeath:
-  - {fileID: 5859367439120506321}
+  - {fileID: 0}
   - {fileID: 3036158008718558669}
   - {fileID: 0}
-  - {fileID: 7929870738425077638}
---- !u!114 &4863069957269165056
+  - {fileID: 0}
+--- !u!114 &-6889212073495411995
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -503,12 +542,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 4361076506588931693}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f34e76696c31b734b8ec7b0a3d6ef172, type: 3}
+  m_Script: {fileID: 11500000, guid: fcd1a7531642a8a419f99eedc402d5e9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TankHealthOffline
-  maxHealth: 100
-  armour: 0
---- !u!114 &7929870738425077638
+  m_EditorClassIdentifier: Assembly-CSharp::TankHealth
+  ShowTopMostFoldoutHeaderGroup: 1
+  Health:
+    m_InternalValue: 100
+  Armour:
+    m_InternalValue: 100
+--- !u!114 &-1997752136652836357
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -517,23 +559,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 4361076506588931693}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68e68c37ab20e3f4a886102f0fd44032, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f8d43c04680ae443a86da1a0133959f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TankTurretOffline
+  m_EditorClassIdentifier: Assembly-CSharp::TankTurret
+  ShowTopMostFoldoutHeaderGroup: 1
   turretPivot: {fileID: 5739415353636254969}
   barrelPivot: {fileID: 7770136943962444816}
-  muzzle: {fileID: 4187948459597267077}
-  aimLine: {fileID: 6780409688746404658}
-  aimMarkerPrefab: {fileID: 4442294353759229538, guid: 5474f07aedbe68a4794196ff257b5b8f, type: 3}
-  aimMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  aimLength: 500
-  minPitch: -30
-  maxPitch: 45
-  yawSpeed: 130
-  pitchSpeed: 130
---- !u!114 &5859367439120506321
+  aimInput: {fileID: 5452882643357447425}
+  minPitch: -10
+  maxPitch: 25
+  yawSpeed: 0
+  pitchSpeed: 0
+--- !u!114 &-8581915899089972532
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -542,17 +579,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 4361076506588931693}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fcb6675b0bccf641a89778ff2e68840, type: 3}
+  m_Script: {fileID: 11500000, guid: 3203a9f8e8143ae438c29eb8727dc7ad, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TankWeaponOffline
+  m_EditorClassIdentifier: Assembly-CSharp::TankWeapon
+  ShowTopMostFoldoutHeaderGroup: 1
   muzzle: {fileID: 4187948459597267077}
-  projectilePrefab: {fileID: 8883247779544349089, guid: a7cb0db15e13a374b99c7e2804bf2660, type: 3}
-  fireRate: 1
+  projectilePrefab: {fileID: 1375234833002990852, guid: 7689fefb818385e48833a78bb268c60e, type: 3}
+  fireRate: 3
   damage: 25
-  projectileSpeed: 40
-  ammoCapacity: 32
+  projectileSpeed: 18
+  ammoCapacity: 31
   magCapacity: 1
   reloadTime: 2
+  AmmoReserve:
+    m_InternalValue: 0
+  AmmoLoaded:
+    m_InternalValue: 0
+  Reloading:
+    m_InternalValue: 0
 --- !u!114 &-2905557943405449582
 MonoBehaviour:
   m_ObjectHideFlags: 0

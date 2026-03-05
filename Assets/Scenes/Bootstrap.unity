@@ -251,6 +251,7 @@ MonoBehaviour:
     coverage: 0
     density: 0
   maxPlayers: 16
+  waitForClientsTime: 20
 --- !u!1 &1841154871
 GameObject:
   m_ObjectHideFlags: 0
