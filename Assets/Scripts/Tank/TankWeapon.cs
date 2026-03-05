@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -16,6 +17,8 @@ public class TankWeapon : NetworkBehaviour
     public int ammoCapacity = 31;
     public int magCapacity = 1;
     public float reloadTime = 2f;
+
+    [SerializeField] private bool holdToFire = false;
 
     public NetworkVariable<int> AmmoReserve = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> AmmoLoaded = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -40,8 +43,19 @@ public class TankWeapon : NetworkBehaviour
         if (!IsOwner || !IsClient) return;
         if (InputManager.Instance == null) return;
 
-        if (InputManager.Instance.ShootHeld)
-            RequestFireServerRpc();
+        if (holdToFire)
+        {
+            if (InputManager.Instance.ShootHeld)
+            {
+                RequestFireServerRpc();
+            }
+        } else
+        {
+            if (InputManager.Instance.ShootPressedThisFrame)
+            {
+                RequestFireServerRpc();
+            }
+        }
 
         // Add Reload logic key call here
     }

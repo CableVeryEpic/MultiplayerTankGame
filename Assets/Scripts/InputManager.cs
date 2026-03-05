@@ -18,6 +18,7 @@ public class InputManager : MonoBehaviour
     public Vector2 Look { get; private set; }
     public bool BoostHeld { get; private set; }
     public bool ShootHeld { get; private set; }
+    public bool ShootPressedThisFrame { get; private set; }
     public bool AbilityPressedThisFrame { get; private set; }
     public bool ReloadPressedThisFrame { get; private set; }
 
@@ -42,6 +43,7 @@ public class InputManager : MonoBehaviour
         BoostHeld = boostAction.action.IsPressed();
         ShootHeld = shootAction.action.IsPressed();
 
+        ShootPressedThisFrame = shootAction.action.WasPressedThisFrame();
         AbilityPressedThisFrame = abilityAction.action.WasPressedThisFrame();
         ReloadPressedThisFrame = reloadAction.action.WasPressedThisFrame();
     }

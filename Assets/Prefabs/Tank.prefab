@@ -306,7 +306,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 4258629136
+  GlobalObjectIdHash: 3038024214
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -587,10 +587,11 @@ MonoBehaviour:
   projectilePrefab: {fileID: 1375234833002990852, guid: 7689fefb818385e48833a78bb268c60e, type: 3}
   fireRate: 3
   damage: 25
-  projectileSpeed: 18
+  projectileSpeed: 25
   ammoCapacity: 31
   magCapacity: 1
   reloadTime: 2
+  holdToFire: 0
   AmmoReserve:
     m_InternalValue: 0
   AmmoLoaded:
